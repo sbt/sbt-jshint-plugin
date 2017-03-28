@@ -3,7 +3,6 @@ package com.typesafe.sbt.jshint
 import sbt._
 import sbt.Keys._
 import sbt.File
-import scala.Some
 import com.typesafe.sbt.jse.SbtJsTask
 import com.typesafe.sbt.web.SbtWeb
 
@@ -35,6 +34,7 @@ object SbtJSHint extends AutoPlugin {
   import WebKeys._
   import SbtJsTask.autoImport.JsTaskKeys._
   import autoImport.JshintKeys._
+  import com.typesafe.sbt.jse.JsEngineImport.JsEngineKeys._
 
   override def projectSettings = Seq(
     config := None,
@@ -67,6 +67,13 @@ object SbtJSHint extends AutoPlugin {
       taskMessage in TestAssets := "JavaScript test linting"
 
     )
-  ) ++ SbtJsTask.addJsSourceFileTasks(jshint)
+  ) ++ SbtJsTask.addJsSourceFileTasks(jshint) ++ Seq(
+    jshint in Assets := (jshint in Assets).dependsOn(nodeModules in Assets).value,
+    jshint in TestAssets := (jshint in TestAssets).dependsOn(nodeModules in TestAssets).value,
+
+    // prepend NPM directory to the PATH to support jshint version override in package.json
+    nodeModuleGenerators in Plugin <+= npmNodeModules in Assets,
+    nodeModuleDirectories in Plugin := (baseDirectory.value / "node_modules") +: (nodeModuleDirectories in Plugin).value
+  )
 
 }
