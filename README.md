@@ -21,7 +21,9 @@ src/test/assets/\*\*/\*.js sources are linted.
 Options can be specified in accordance with the
 [JSHint website](http://www.jshint.com/docs) and they share the same set of defaults. To set an option you can
 provide a `.jshintrc` file within your project's base directory. If there is no such file then a `.jshintrc` file will
-be search for in your home directory. This behaviour can be overridden by using a `JshintKeys.config` setting for the plugin.
+be searched for in your home directory. Note that contrary to the `.jshintrc` files accepted by the regular cli runner, _this file must be valid JSON_. So no comments allowed in this file.
+
+This behaviour can be overridden by using a `JshintKeys.config` setting for the plugin.
 `JshintKeys.config` is used to specify the location of a configuration file.
 
 &copy; Typesafe Inc., 2013, 2014
